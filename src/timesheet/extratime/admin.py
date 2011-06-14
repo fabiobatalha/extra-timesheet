@@ -3,26 +3,21 @@
 from django.contrib import admin
 from timesheet.extratime.models import *
 
-class JobTypeAdmin(admin.ModelAdmin):
+class AttatchmentInline(admin.StackedInline):
+    model = Attatchment
+
+class EventTypeAdmin(admin.ModelAdmin):
     list_display = ('type','description', )
     
-class JobAdmin(admin.ModelAdmin):
+class EventAdmin(admin.ModelAdmin):
     list_display = ('creator','created','description','hours', )
+    inlines = [AttatchmentInline]    
     def save_model(self, request, instance, form, change):
         instance.creator = request.user
-        super(JobAdmin, self).save_model(request, instance, form, change)    
-
-class EnjoyAdmin(admin.ModelAdmin):
-    list_display = ('creator','created','description','hours', )
-    def save_model(self, request, instance, form, change):
-        instance.creator = request.user
-        super(EnjoyAdmin, self).save_model(request, instance, form, change)    
+        super(EventAdmin, self).save_model(request, instance, form, change)    
     
-if Job not in admin.site._registry:
-    admin.site.register(Job, JobAdmin)
-
-if Enjoy not in admin.site._registry:
-    admin.site.register(Enjoy, EnjoyAdmin)
+if Event not in admin.site._registry:
+    admin.site.register(Event, EventAdmin)
     
-if JobType not in admin.site._registry:
-    admin.site.register(JobType, JobTypeAdmin)
+if EventType not in admin.site._registry:
+    admin.site.register(EventType, EventTypeAdmin)
